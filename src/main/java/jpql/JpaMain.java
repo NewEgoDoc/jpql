@@ -16,37 +16,26 @@ public class JpaMain {
         tx.begin();
 
         try {
-            Member member = new Member();
-            member.setUsername("member1");
-            member.setAge(10);
-            em.persist(member);
+
+            for(int i = 1; i <= 100; i++) {
+                Member member = new Member();
+                member.setUsername("member"+i);
+                member.setAge(i);
+                em.persist(member);
+            }
 
             em.flush();
             em.clear();
 
-            //List<Team> result = em.createQuery("select t from Member m join m.team t", Team.class).getResultList();
+            List<Member> resultList = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(1)
+                    .setMaxResults(10)
+                    .getResultList();
 
-            //Member findMember = result.get(0);
-            //findMember.setAge(20);
-
-//            List resultList = em.createQuery("select m.username, m.age from Member m").getResultList();
-//
-//            Object o = resultList.get(0);
-//            Object[] result = (Object[])o;
-//            System.out.println("result = " + result[0]);
-//            System.out.println("result = " + result[1]);
-
-//            List<Object[]> resultList = em.createQuery("select m.username, m.age from Member m").getResultList();
-//
-//            Object[] result = resultList.get(0);
-//            System.out.println("result = " + result[0]);
-//            System.out.println("result = " + result[1]);
-
-            List<Object[]> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m",MemberDTO.class).getResultList();
-
-            MemberDTO memberDTO = resultList.get(0);
-            System.out.println("memberDTO = " + memberDTO.getUsername());
-            System.out.println("memberDTO = " + memberDTO.getAge());
+            System.out.println("resultList.size() = " + resultList.size());
+            for(Member member1: resultList){
+                System.out.println("member1 = " + member1);
+            }
 
             tx.commit();
         } catch (Exception e){
