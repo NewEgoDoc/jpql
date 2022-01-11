@@ -21,22 +21,32 @@ public class JpaMain {
             member.setAge(10);
             em.persist(member);
 
-//            TypedQuery<Member> query1 = em.createQuery("select m from Member as m", Member.class);
-//            TypedQuery<String> query2 = em.createQuery("select m.username from Member as m", String.class);
-//            Query query3 = em.createQuery("select m.username from Member as m");
+            em.flush();
+            em.clear();
 
-//            List<Member> resultList = query1.getResultList();
-//            for (Member m: resultList) {
-//                System.out.println("m = " + m);
-//            }
+            //List<Team> result = em.createQuery("select t from Member m join m.team t", Team.class).getResultList();
 
-//            Member singleResult = query1.getSingleResult();
-//            System.out.println("singleResult = " + singleResult);
+            //Member findMember = result.get(0);
+            //findMember.setAge(20);
 
-            Member result = em.createQuery("select m from Member m where m.username =:username", Member.class)
-                    .setParameter("username", "member1")
-                    .getSingleResult();
-            System.out.println("result = " + result);
+//            List resultList = em.createQuery("select m.username, m.age from Member m").getResultList();
+//
+//            Object o = resultList.get(0);
+//            Object[] result = (Object[])o;
+//            System.out.println("result = " + result[0]);
+//            System.out.println("result = " + result[1]);
+
+//            List<Object[]> resultList = em.createQuery("select m.username, m.age from Member m").getResultList();
+//
+//            Object[] result = resultList.get(0);
+//            System.out.println("result = " + result[0]);
+//            System.out.println("result = " + result[1]);
+
+            List<Object[]> resultList = em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m",MemberDTO.class).getResultList();
+
+            MemberDTO memberDTO = resultList.get(0);
+            System.out.println("memberDTO = " + memberDTO.getUsername());
+            System.out.println("memberDTO = " + memberDTO.getAge());
 
             tx.commit();
         } catch (Exception e){
