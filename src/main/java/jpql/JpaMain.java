@@ -23,7 +23,7 @@ public class JpaMain {
             Member member = new Member();
             member.setUsername("member");
             member.setAge(1);
-
+            member.setType(MemberType.ADMIN);
             member.setTeam(team);
 
             em.persist(member);
@@ -31,9 +31,21 @@ public class JpaMain {
             em.flush();
             em.clear();
 
-            String query = "select (select avg(m1.age) as avgAge from Member m1) from Member m left join Team t on m.username = t.name";
-            List<Member> resultList = em.createQuery(query, Member.class)
+            String query = "select m.username,'HELLO', TRUE From Member m" +
+                    "where m.type=jpql.MemberType.ADMIN";//USER
+            /* 파라미터 바인딩 버전
+            String query = "select m.username,'HELLO', TRUE From Member m" +
+                    "where m.type=:userType";
+            */
+            List<Object[]> resultList = em.createQuery(query)
+                    .setParameter("userType",MemberType.ADMIN)
                     .getResultList();
+
+            for(Object[] objects: resultList){
+                System.out.println("objects = " + objects[0]);
+                System.out.println("objects = " + objects[1]);
+                System.out.println("objects = " + objects[2]);
+            }
 
             tx.commit();
         } catch (Exception e){
