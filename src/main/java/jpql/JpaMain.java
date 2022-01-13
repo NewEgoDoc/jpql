@@ -20,26 +20,28 @@ public class JpaMain {
             team.setName("teamA");
             em.persist(team);
 
-            Member member = new Member();
-            member.setUsername("관리자");
-            member.setAge(1);
-            member.setType(MemberType.ADMIN);
-            member.setTeam(team);
+            Member member1 = new Member();
+            member1.setUsername("관리자1");
+            em.persist(member1);
 
-            em.persist(member);
+            Member member2 = new Member();
+            member2.setUsername("관리자2");
+            em.persist(member2);
 
             em.flush();
             em.clear();
+            //String query = "select 'a' || 'b' from Member m";
 
-//            String query = "select " +
-//                                    "case when m.age <= 10 then '학생요금' "+
-//                                    "     when m.age >= 60 then '경로요금' "+
-//                                    "     else '일반요금' " +
-//                                    "end " +
-//                            "from Member m";
-            String query = "select nullif(m.username, '관리자') as username from Member m";
+            //String query = "select substring(m.username,2,3) From Member m";//substring(타켓,시작지점,시작지점부터길이이)
+
+            //String query = "select locate('de','abcdegf') From Member m";
+            //검색위치부터 문자를 검색한다. 1부터 시작하고 못찾으면 0을 반환한다.
+
+            //String query = "select size(t.members) From Team t";
+            String query = "select group_concat(m.username) From Member m";
+
             List<String> result = em.createQuery(query, String.class).getResultList();
-            
+
             for(String s: result){
                 System.out.println("s = " + s);
             }
