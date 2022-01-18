@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Collections;
 import java.util.List;
 
 public class JpaMain {
@@ -30,21 +31,10 @@ public class JpaMain {
 
             em.flush();
             em.clear();
-            //String query = "select 'a' || 'b' from Member m";
 
-            //String query = "select substring(m.username,2,3) From Member m";//substring(타켓,시작지점,시작지점부터길이이)
+            //String query = "select m.team.name From Member m ";//묵시적 내부조인 발생
+            String query = "select t.members From Team t ";
 
-            //String query = "select locate('de','abcdegf') From Member m";
-            //검색위치부터 문자를 검색한다. 1부터 시작하고 못찾으면 0을 반환한다.
-
-            //String query = "select size(t.members) From Team t";
-            String query = "select group_concat(m.username) From Member m";
-
-            List<String> result = em.createQuery(query, String.class).getResultList();
-
-            for(String s: result){
-                System.out.println("s = " + s);
-            }
 
             tx.commit();
         } catch (Exception e){
